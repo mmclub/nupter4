@@ -10,23 +10,31 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.mmclub.nupternew.R;
 import com.mmclub.nupternew.fragment.FragmentFactory;
+import com.mmclub.nupternew.fragment.left_side_menu.LeftMenu;
 import com.mmclub.nupternew.fragment.main.MainFragment;
 
-public class MainActivity extends Activity {
+public class MainActivity extends SlidingFragmentActivity {
     private FragmentManager fragmentManager;
     private RadioGroup radioGroup;
-
+    private ImageButton MenuButton;
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        initLeftMenu();
+        MenuButton=(ImageButton)this.findViewById(R.id.menu_button);
 
         fragmentManager = getFragmentManager();
         radioGroup = (RadioGroup) findViewById(R.id.rg_tab);
@@ -44,6 +52,30 @@ public class MainActivity extends Activity {
                 transaction.commit();
             }
         });
-    }
 
+        MenuButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                getSlidingMenu().showMenu();
+                        }
+        });
+    }
+    private void initLeftMenu(){
+        LeftMenu leftMenuFragment = new LeftMenu();
+        setBehindContentView(R.layout.left_menu);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.side_menu, leftMenuFragment).commit();
+        SlidingMenu menu = getSlidingMenu();
+        // 设置触摸屏幕的模式
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        menu.setShadowWidthRes(R.dimen.shadow_width);
+        menu.setShadowDrawable(R.drawable.shadow);
+        // 设置滑动菜单视图的宽度
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+        // 设置渐入渐出效果的值
+        menu.setFadeDegree(0.35f);
+        menu.setSecondaryShadowDrawable(R.drawable.shadow);
+    }
+    public void showLeftMenu(View view) {
+        getSlidingMenu().showMenu();
+    }
 }
