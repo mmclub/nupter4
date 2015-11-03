@@ -22,6 +22,8 @@ import com.mmclub.nupternew.fragment.FragmentFactory;
 import com.mmclub.nupternew.fragment.left_side_menu.LeftMenu;
 import com.mmclub.nupternew.fragment.main.MainFragment;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class MainActivity extends SlidingFragmentActivity {
     private FragmentManager fragmentManager;
     private RadioGroup radioGroup;
@@ -34,6 +36,7 @@ public class MainActivity extends SlidingFragmentActivity {
         setContentView(R.layout.activity_main);
 
         initLeftMenu();
+        JPushInterface.init(this);
         MenuButton=(ImageButton)this.findViewById(R.id.menu_button);
 
         fragmentManager = getFragmentManager();
@@ -77,5 +80,9 @@ public class MainActivity extends SlidingFragmentActivity {
     }
     public void showLeftMenu(View view) {
         getSlidingMenu().showMenu();
+    }
+    // 初始化 JPush。如果已经初始化，但没有登录成功，则执行重新登录。
+    private void init() {
+        JPushInterface.init(getApplicationContext());
     }
 }
